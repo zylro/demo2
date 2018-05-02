@@ -1,0 +1,13 @@
+server:
+    applicationConnectors:
+    - type: http
+      port: 8080
+logging:
+  level: INFO
+  loggers:
+      zylro.atc: DEBUG
+  appenders:
+    - type: console
+      threshold: DEBUG
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+apiKey: bloop

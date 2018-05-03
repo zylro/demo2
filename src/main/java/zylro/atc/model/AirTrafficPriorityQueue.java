@@ -3,25 +3,28 @@ package zylro.atc.model;
 import java.util.LinkedList;
 import java.util.UUID;
 import org.bson.Document;
+import zylro.atc.Utils;
 import static zylro.atc.Utils.fromJson;
 
 /**
+ * Wrapper class to store the priority queue in mongo
  *
  * @author wot
  */
-public class AirTrafficPriorityQueue {
+public class AirTrafficPriorityQueue extends DbObject {
 
     private LinkedList<UUID> queue;
-    //mongodb uses this as the identifying field
-    public static String ID_FIELD = "_id";
 
     public static AirTrafficPriorityQueue fromDoc(Document doc) {
-        return fromJson(doc.toJson(), AirTrafficPriorityQueue.class);
+        UUID id = doc.get(ID_FIELD, UUID.class);
+        doc.remove(ID_FIELD);
+        doc.put("id", id);
+        return fromJson(Utils.toJson(doc), AirTrafficPriorityQueue.class);
     }
 
     public Document toDoc(UUID queueId) {
         return new Document(ID_FIELD, queueId)
-                .append("list", queue);
+                .append("queue", queue);
     }
 
     public AirTrafficPriorityQueue() {

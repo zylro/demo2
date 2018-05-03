@@ -50,6 +50,7 @@ public class AirTrafficControlResource {
     }
 
     @GET
+    @Path("/queue")
     public Response getQueueState() {
         LOG.info("getQueueState request");
         return Response.ok(atcService.getQueueState()).build();

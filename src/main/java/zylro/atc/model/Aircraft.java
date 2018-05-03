@@ -1,12 +1,9 @@
 package zylro.atc.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import org.bson.Document;
+import zylro.atc.Utils;
 import static zylro.atc.Utils.fromJson;
 
 /**
@@ -14,24 +11,34 @@ import static zylro.atc.Utils.fromJson;
  *
  * @author wot
  */
-public class Aircraft implements Comparable<Aircraft> {
+public class Aircraft extends DbObject implements Comparable<Aircraft> {
 
-    protected final Map<String, Object> additionalProperties = new HashMap<>();
-
+    /**
+     * Compares 2 aircrafts by type and size
+     *
+     * @param a aicraft to compare to
+     * @return 0 if they have same priority, >0 if this has higher priority {a}
+     * and <0 if this has lower priority then {a}
+     */
     @Override
     public int compareTo(Aircraft a) {
-        return 0;
+        if (this.type == a.type) {
+            if (this.size == a.size) {
+                return 0;
+            }
+            return this.size.ordinal() - a.size.ordinal();
+        }
+        return this.type.ordinal() - a.type.ordinal();
     }
 
     public enum Type {
-        Emergency, VIP, Passenger, Cargo
+        Cargo, Passenger, VIP, Emergency
     }
 
     public enum Size {
         Small, Large
     }
-    //mongodb uses this as the identifying field
-    public static String ID_FIELD = "_id";
+
     private UUID id;
     @NotNull
     private Type type;
@@ -39,7 +46,10 @@ public class Aircraft implements Comparable<Aircraft> {
     private Size size;
 
     public static Aircraft fromDoc(Document doc) {
-        return fromJson(doc.toJson(), Aircraft.class);
+        UUID id = doc.get(ID_FIELD, UUID.class);
+        doc.remove(ID_FIELD);
+        doc.put("id", id);
+        return fromJson(Utils.toJson(doc), Aircraft.class);
     }
 
     public Document toDoc() {
@@ -72,13 +82,4 @@ public class Aircraft implements Comparable<Aircraft> {
         this.size = size;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperties(String key, Object value) {
-        this.additionalProperties.put(key, value);
-    }
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
 }

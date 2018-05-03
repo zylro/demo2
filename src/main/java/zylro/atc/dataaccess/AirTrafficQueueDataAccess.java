@@ -4,7 +4,6 @@ import com.mongodb.MongoClient;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import java.util.LinkedList;
 import java.util.UUID;
 import org.bson.Document;
 import org.eclipse.jetty.http.HttpStatus;

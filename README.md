@@ -12,7 +12,7 @@ mvn clean -U install
 ```
 ### deployment
 
-[heroku endpoint](http://http://zylro-atc.herokuapp.com)
+[heroku endpoint](http://zylro-atc.herokuapp.com)
 
 example cURL
 ```
